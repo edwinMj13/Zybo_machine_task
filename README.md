@@ -37,6 +37,23 @@ REST API (Fetching food data)
 
 Shared Preferences (Local storage for wishlist)
 
+ Installation
+
+Clone this repository:
+
+git clone https://github.com/yourusername/foodie-delight.git
+
+Navigate to the project directory:
+
+cd foodie-delight
+
+Install dependencies:
+
+flutter pub get
+
+Run the app:
+flutter run
+
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
