@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zybo_task/features/presentation/pages/login_page/login_page.dart';
 import 'package:zybo_task/features/presentation/pages/main_page/main_page.dart';
 import 'package:zybo_task/features/presentation/pages/search_results_page/search_results_page.dart';
+import 'package:zybo_task/features/presentation/pages/splash_page/splash_page.dart';
 
 class Routes{
   static Route<dynamic> generateRoutes(RouteSettings settings){
 
     switch(settings.name){
-      // case "splashPage":
-      //   return MaterialPageRoute(builder: )
+      case "splashPage":
+        return MaterialPageRoute(builder: (context)=>SplashPage());
       case "loginPage":
         return MaterialPageRoute(builder: (context) =>LoginPage());
       case "mainPage":

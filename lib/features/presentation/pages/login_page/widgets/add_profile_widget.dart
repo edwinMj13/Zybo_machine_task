@@ -8,10 +8,11 @@ class AddProfileWidget extends StatelessWidget {
   AddProfileWidget({
     super.key,
     required this.phone,
+    required this.nameController,
   });
 
   final _formKeyName = GlobalKey<FormState>();
-  final nameController = TextEditingController();
+  final TextEditingController nameController;
   final String phone;
 
   validateNameField() {
@@ -50,12 +51,15 @@ class AddProfileWidget extends StatelessWidget {
         LoginButton(
           controller: nameController,
           buttonLabel: "Submit",
-          callback: () => LoginCases.addProfileNameButton(
-            context,
-            nameController.text,
-            phone,
-
-          ),
+          callback: () {
+            if(validateNameField()){
+              LoginCases.addProfileNameButton(
+                context,
+                nameController.text,
+                phone,
+              );
+            }
+          },
         )
       ],
     );

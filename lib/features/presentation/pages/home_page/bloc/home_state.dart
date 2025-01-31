@@ -11,3 +11,11 @@ class HomeDataSuccessState extends HomeState {
 
   HomeDataSuccessState({required this.bannerList,required this.productList});
 }
+
+class HomeAddRemWishlistState extends HomeState{
+  final String tag;
+
+  HomeAddRemWishlistState({required this.tag});
+}
+
+class HomeFetchErrorState extends HomeState{}

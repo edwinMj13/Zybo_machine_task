@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:either_dart/src/either.dart';
+import 'package:zybo_task/features/data/local_data/local_storage.dart';
 import 'package:zybo_task/features/data/models/banner_model.dart';
 import 'package:zybo_task/features/data/models/error_model.dart';
 import 'package:zybo_task/features/data/models/product_model.dart';
@@ -41,8 +42,10 @@ class HomeServices implements HomeRepository {
     // TODO: implement getProductsList
     const url = "$kBaseUrl$kProductsEndPoint";
     List<ProductModel> productList = [];
+    final token = await CachedData.getUserToken();
+    print("Token $token");
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url),headers: {"Authorization":"Bearer $token"});
       final json = jsonDecode(response.body);
       print("getProductsList - ${response.body}");
       if (response.statusCode == 200) {
@@ -57,6 +60,31 @@ class HomeServices implements HomeRepository {
       }
     } catch (e) {
       print("getProductsList Exception - $e");
+      return Left(ErrorModel(status: "Exception", messsage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ErrorModel, List<ProductModel>>> getSearchResults(String query) async {
+    // TODO: implement getSearchResults
+    const url = "$kBaseUrl$kSearchEndPoint";
+    List<ProductModel> productList = [];
+    try {
+      final response = await http.post(Uri.parse(url),body: {"query":query});
+      final json = jsonDecode(response.body);
+      print("getSearchResults - ${response.body}");
+      if (response.statusCode == 200) {
+        //final data = ProductModel.fromJson(json);
+        json.forEach((value) {
+          productList.add(ProductModel.fromJson(value));
+        });
+        return Right(productList);
+      } else {
+        return Left(ErrorModel(
+            status: response.statusCode.toString(), messsage: response.body));
+      }
+    } catch (e) {
+      print("getSearchResults Exception - $e");
       return Left(ErrorModel(status: "Exception", messsage: e.toString()));
     }
   }

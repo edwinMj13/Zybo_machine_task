@@ -18,7 +18,7 @@ class LoginServices implements LoginRepository{
       final response = await http.post(Uri.parse(url),body: { "phone_number": phNo,"first_name":username });
       final json = jsonDecode(response.body);
       print("loginRegisterUser - ${response.body}");
-      if(response.statusCode==200){
+      if(response.statusCode>=200 && response.statusCode<300){
         final data = LoginRegisterModel.fromJson(json);
         return Right(data);
       }else{
@@ -38,7 +38,7 @@ class LoginServices implements LoginRepository{
       final response = await http.post(Uri.parse(url),body: { "phone_number": phNo, });
       final json = jsonDecode(response.body);
       print(" verifyOtp - Response - ${response.body}");
-      if(response.statusCode==200){
+      if(response.statusCode>=200 && response.statusCode<300){
         final data = OtpVerificationModel.fromJson(json);
         return Right(data);
       }else{

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zybo_task/config/routes/route_names.dart';
@@ -6,12 +8,10 @@ import 'package:zybo_task/features/data/models/otp_verification_model.dart';
 import '../../presentation/pages/login_page/bloc/login_bloc.dart';
 
 class LoginCases{
-  backToNumberUi(){
 
-  }
-  backToOtpUi(){
+  Timer? timer;
 
-  }
+  static ValueNotifier<int> timerNotifier = ValueNotifier(15);
 
   static verifyPhoneNumberButton(BuildContext context, String phNo){
     context
@@ -33,4 +33,15 @@ class LoginCases{
   static navigateToMainPage(BuildContext context){
     Navigator.pushNamed(context, RouteNames.mainPage);
   }
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timerNotifier.value > 0) {
+        timerNotifier.value--;
+      } else {
+        timer.cancel();
+      }
+      print(timerNotifier.value);
+    });
+  }
+
 }

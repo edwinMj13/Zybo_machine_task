@@ -6,4 +6,5 @@ import 'package:zybo_task/features/data/models/product_model.dart';
 abstract class HomeRepository{
   Future<Either<ErrorModel,List<ProductModel>>> getProductsList();
   Future<Either<ErrorModel,List<BannerModel>>> getBannerList();
+  Future<Either<ErrorModel,List<ProductModel>>> getSearchResults(String query);
 }

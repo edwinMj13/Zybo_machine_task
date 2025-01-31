@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:zybo_task/config/utils.dart';
@@ -7,22 +10,43 @@ import '../../../../data/models/otp_verification_model.dart';
 import '../../../widgets/back_button_card.dart';
 import '../../../widgets/login_button.dart';
 
-class VerifyOtpWidget extends StatelessWidget {
+class VerifyOtpWidget extends StatefulWidget {
    VerifyOtpWidget({
     super.key,
      required this.model,
      required this.phone,
+     required this.otpController,
   });
 final OtpVerificationModel model;
 final String phone;
-  final _formKeyPin = GlobalKey<FormState>();
-   final otpController = TextEditingController();
+   final TextEditingController otpController;
 
+  @override
+  State<VerifyOtpWidget> createState() => _VerifyOtpWidgetState();
+}
+
+class _VerifyOtpWidgetState extends State<VerifyOtpWidget> {
+  final _formKeyPin = GlobalKey<FormState>();
+  LoginCases loginCases = LoginCases();
+
+
+  @override
+  void initState() {
+    super.initState();
+    loginCases.startTimer();
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    loginCases.timer!.cancel();
+  }
 
   validateOtpPinField() {
     final isTrue = _formKeyPin.currentState!.validate();
-    print("PIN - ${model.otp}  Controller - ${otpController.text}");
-    if (isTrue && otpController.text==model.otp ) {
+    print("PIN - ${widget.model.otp}  Controller - ${widget.otpController.text}");
+    if (isTrue && widget.otpController.text==widget.model.otp ) {
       return true;
     }
     return false;
@@ -49,7 +73,7 @@ final String phone;
                   style: const TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: phone,
+                      text: widget.phone,
                       style:
                       const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     )
@@ -64,7 +88,7 @@ final String phone;
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: model.otp,
+                  text: widget.model.otp,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -75,26 +99,53 @@ final String phone;
         Form(
           key: _formKeyPin,
           child:  Pinput(
-            controller: otpController,
+            controller: widget.otpController,
             onCompleted: print,
             length: 4,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
         ),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("00:120 Sec"),
-            Text("Dont recieve code ? Re-send"),
-            SizedBox(
-              height: 20,
-            ),
-          ],
+        ValueListenableBuilder<int>(
+          valueListenable: LoginCases.timerNotifier,
+          builder: (context,snap,_) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                        visible:snap>0?true:false,
+                        child: Text("00:$snap Sec")),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text:  TextSpan(
+                          text: "Dont recieve code ? ",
+                          style: TextStyle(color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: "Re-send",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: snap>0?Colors.blueGrey: Colors.blue),
+                            )
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }
         ),
-        LoginButton(controller: otpController,buttonLabel: "Submit",callback: (){
+        LoginButton(controller: widget.otpController,buttonLabel: "Submit",callback: (){
           if(validateOtpPinField()){
-            LoginCases.otpVerifyButton(context,model,phone);
+            LoginCases.otpVerifyButton(context,widget.model,widget.phone);
           }else{
             Utils.snackbarUtils(context, "Incorrect OTP",Colors.red);
           }

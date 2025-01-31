@@ -8,6 +8,7 @@ import 'package:zybo_task/features/presentation/widgets/search_widget.dart';
 import 'package:zybo_task/features/presentation/widgets/products_grid_list_widget.dart';
 
 import '../../../../config/routes/route_names.dart';
+import '../../../../config/utils.dart';
 import '../../../domain/use_cases/home_cases.dart';
 import 'bloc/home_bloc.dart';
 
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         const SizedBox(
@@ -44,9 +46,12 @@ class _HomePageState extends State<HomePage> {
         ),
         BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if(state is HomeFetchErrorState){
+              Utils.snackbarUtils(context, "Something Wrong...!", Colors.red);
+            }
           },
           builder: (context, state) {
+            print("State is $state");
             if (state is HomeDataSuccessState) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,20 +59,20 @@ class _HomePageState extends State<HomePage> {
                   BannerSlider(
                     bannerList: state.bannerList,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],
               );
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         ),
         Expanded(
           child: BlocConsumer<HomeBloc, HomeState>(
             listener: (context, state) {
-              // TODO: implement listener
+
             },
             builder: (context, state) {
               if (state is HomeDataSuccessState) {
@@ -82,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                      child: ProductGridListWidget(productList: state.productList),
+                      child: ProductGridListWidget(productList: state.productList,tag: "home"),
                     )
                   ],
                 );
@@ -113,6 +118,19 @@ class BannerSlider extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 bannerList[index].image!,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.image,size: 100,);
+                },
               ));
         }),
         options: CarouselOptions(

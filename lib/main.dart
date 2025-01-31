@@ -6,6 +6,8 @@ import 'package:zybo_task/features/presentation/pages/home_page/bloc/home_bloc.d
 import 'package:zybo_task/features/presentation/pages/login_page/bloc/login_bloc.dart';
 import 'package:zybo_task/features/presentation/pages/login_page/login_page.dart';
 import 'package:zybo_task/features/presentation/pages/profile_page/bloc/profile_bloc.dart';
+import 'package:zybo_task/features/presentation/pages/search_results_page/bloc/search_results_page_bloc.dart';
+import 'package:zybo_task/features/presentation/pages/wishlist_page/bloc/wishlist_bloc.dart';
 
 import 'features/presentation/pages/main_page/main_page.dart';
 
@@ -24,6 +26,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=>LoginBloc()),
         BlocProvider(create: (context)=>HomeBloc()),
         BlocProvider(create: (context)=>ProfileBloc()),
+        BlocProvider(create: (context)=>SearchResultsPageBloc()),
+        BlocProvider(create: (context)=>WishlistBloc()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: Colors.white,
         ),
-        initialRoute: RouteNames.mainPage,
+        initialRoute: RouteNames.splashPage,
         onGenerateRoute: Routes.generateRoutes,
       ),
     );

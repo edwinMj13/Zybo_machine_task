@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../domain/use_cases/login_cases.dart';
 import '../../../widgets/login_button.dart';
@@ -6,9 +7,10 @@ import '../../../widgets/login_button.dart';
 class PhoneNumberUiWidget extends StatelessWidget {
   PhoneNumberUiWidget({
     super.key,
+    required this.phnoController,
   }) ;
 
-  final phnoController = TextEditingController();
+  final TextEditingController phnoController ;
 
   final _formKeyPhone = GlobalKey<FormState>();
   validatePhoneNumberField() {
@@ -47,6 +49,8 @@ class PhoneNumberUiWidget extends StatelessWidget {
               child: Form(
                 key: _formKeyPhone,
                 child: TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: TextInputType.number,
                   controller: phnoController,
                   decoration: const InputDecoration(
                     label: Text("Enter Phone"),
@@ -55,6 +59,8 @@ class PhoneNumberUiWidget extends StatelessWidget {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Phone Number is Empty";
+                    }else if(value.length!=10){
+                      return "Enter valid number";
                     }
                     return null;
                   },
@@ -63,7 +69,11 @@ class PhoneNumberUiWidget extends StatelessWidget {
             ),
           ],
         ),
-        LoginButton(controller: phnoController, buttonLabel: "Continue",callback: ()=>LoginCases.verifyPhoneNumberButton(context,phnoController.text),),
+        LoginButton(controller: phnoController, buttonLabel: "Continue",callback: (){
+          if(validatePhoneNumberField()){
+            LoginCases.verifyPhoneNumberButton(context,phnoController.text);
+          }
+        },),
         SizedBox(height: 20,),
         terms(),
       ],
