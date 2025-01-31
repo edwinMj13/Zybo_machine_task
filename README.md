@@ -20,7 +20,7 @@ Foodie Delight is a Flutter-based food app that allows users to explore differen
 
  Ratings & Reviews – Check dish ratings before ordering
 
- Screenshots
+ 
 ![Screenshot_20250131-124311](https://github.com/user-attachments/assets/e8c841a4-f91f-434f-9a09-f48c8c62d0c6)  ![Screenshot_20250131-124502](https://github.com/user-attachments/assets/bbbf4efa-4e97-49c9-809f-fea75b078249)
 
 ![Screenshot_20250131-124512](https://github.com/user-attachments/assets/4b2ceb21-600c-4015-82df-9323d0e74c14)  ![Screenshot_20250131-124633](https://github.com/user-attachments/assets/b3299241-8d9e-450f-b77b-48987e38c08c)
